@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.intellij.tasks.RunIdeTask
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -9,7 +10,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.4.0"
+    id("org.jetbrains.intellij") version "1.6.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
     // Gradle Qodana Plugin
@@ -27,8 +28,8 @@ repositories {
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
     type.set(properties("platformType"))
+    localPath.set(properties("platformLocalPath"))
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
@@ -48,6 +49,17 @@ qodana {
     showReport.set(System.getenv("QODANA_SHOW_REPORT")?.toBoolean() ?: false)
 }
 
+fun hasProp(name: String): Boolean = extra.has(name)
+
+fun prop(name: String): String =
+    extra.properties[name] as? String ?: error("Property `$name` is not defined in gradle.properties")
+
+fun withProp(name: String, action: (String) -> Unit) {
+    if (hasProp(name)) {
+        action(prop(name))
+    }
+}
+
 tasks {
     // Set the JVM compatibility versions
     properties("javaVersion").let {
@@ -62,6 +74,12 @@ tasks {
 
     wrapper {
         gradleVersion = properties("gradleVersion")
+    }
+
+    runIde {
+        withProp("platformLocalPath") { path ->
+//            ideDir.set(path)
+        }
     }
 
     patchPluginXml {

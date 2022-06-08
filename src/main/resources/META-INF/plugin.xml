@@ -4,7 +4,7 @@
     <name>TuistAppCode</name>
     <vendor>dankinsoid</vendor>
 
-    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.appcode</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.dankinsoid.tuistappcode.services.MyApplicationService"/>
