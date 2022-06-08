@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.dankinsoid.tuistappcode.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.dankinsoid.tuistappcode.MyBundle
 
 class MyApplicationService {
 
