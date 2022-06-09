@@ -1,31 +1,75 @@
 package com.github.dankinsoid.tuistappcode.listeners
 
-import com.intellij.openapi.components.service
+import com.github.dankinsoid.tuistappcode.services.TuistCLI
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
-import com.github.dankinsoid.tuistappcode.services.MyProjectService
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.event.DocumentEvent
-import com.intellij.openapi.editor.event.DocumentListener
-import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.newvfs.BulkFileListener
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent
+import java.util.*
 
 internal class MyProjectManagerListener : ProjectManagerListener {
 
+    private val changedFiles: MutableSet<String> = mutableSetOf()
+    private val dependenciesName = "Dependencies"
+    private var lastUpdateDate = Date()
+
     override fun projectOpened(project: Project) {
-        project.service<MyProjectService>()
-        project.basePath?.let {
+        println(project.workspaceFile?.path)
+        if (project.workspaceFile?.name != "Manifests") {
+            return
+        }
+        val bus = project.messageBus
 
-            println(it)
+        bus.connect().subscribe(VirtualFileManager.VFS_CHANGES, object : BulkFileListener {
 
-            LocalFileSystem.getInstance().findFileByPath(it + "/Tuist/Dependencies.swift")?.let {
-                FileDocumentManager.getInstance().getDocument(it)?.addDocumentListener(object : DocumentListener {
-                    override fun documentChanged(event: DocumentEvent) {
-                        print("Document changed ${event}")
-                    }
-                })
+            override fun before(events: MutableList<out VFileEvent>) {
+                println(events.map { it.isFromSave })
+                changedFiles.addAll(
+                    events
+                        .filter {
+                            it.file?.extension == "swift" && it.isFromSave
+                        }
+                        .mapNotNull { it.file?.name }
+                )
+                updateWithThrottle(project)
             }
+        })
+    }
+
+    override fun projectClosed(project: Project) {
+        update(project)
+    }
+
+    private fun updateWithThrottle(project: Project) {
+        val now = Date()
+        if (now.time - lastUpdateDate.time > 5_000 && !changedFiles.isEmpty()) {
+            update(project)
+            lastUpdateDate = now
+        }
+    }
+
+    private fun update(project: Project) {
+        println("update")
+        if (changedFiles.contains(dependenciesName)) {
+            fetch(project) {
+                generate(project)
+            }
+        } else if (changedFiles.isNotEmpty()) {
+            generate(project)
+        }
+    }
+
+    private fun generate(project: Project) {
+        TuistCLI(project).generate {
+            changedFiles.clear()
+        }
+    }
+
+    private fun fetch(project: Project, onSuccess: () -> Unit) {
+        TuistCLI(project).fetch {
+            changedFiles.remove(dependenciesName)
+            onSuccess()
         }
     }
 }
