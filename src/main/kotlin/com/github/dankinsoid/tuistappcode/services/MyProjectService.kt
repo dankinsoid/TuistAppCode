@@ -6,6 +6,7 @@ import com.github.dankinsoid.tuistappcode.MyBundle
 class MyProjectService(project: Project) {
 
     init {
-        println(MyBundle.message("projectService", project.name))
+        print("service ")
+        println(project.name)
     }
 }

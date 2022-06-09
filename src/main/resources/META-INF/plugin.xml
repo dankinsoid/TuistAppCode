@@ -22,7 +22,7 @@
         <group id="com.github.dankinsoid.tuistappcode.actions.group"
                text="Tuist"
                popup="true"
-               icon="tuist.svg">
+               icon="TuistPluginIcons.Companion.TUIST_ACTION">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <action id="com.github.dankinsoid.tuistappcode.actions.generate"
                     class="com.github.dankinsoid.tuistappcode.actions.Generate"

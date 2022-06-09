@@ -2,10 +2,12 @@ package com.github.dankinsoid.tuistappcode.listeners
 
 import com.github.dankinsoid.tuistappcode.services.TuistCLI
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
+import com.intellij.openapi.wm.WindowManager
 import java.util.*
 
 internal class MyProjectManagerListener : ProjectManagerListener {
@@ -15,8 +17,10 @@ internal class MyProjectManagerListener : ProjectManagerListener {
     private var lastUpdateDate = Date()
 
     override fun projectOpened(project: Project) {
-        println(project.workspaceFile?.path)
-        if (project.workspaceFile?.name != "Manifests") {
+
+        println(ProjectManager.getInstance().openProjects.map { it.name })
+        println(project.name)
+        if (project.name != "Manifests") {
             return
         }
         val bus = project.messageBus
