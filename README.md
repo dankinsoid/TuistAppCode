@@ -8,8 +8,8 @@
 This plugin provides integration with [`Tuist` commmands](https://docs.tuist.io/commands).
 
 ## Usage
-
-Commands are available in `Tools` -> `Tuist` menu. It's recommended to add keymaps for these commands.
+Commands are available in <kbd>Tools</kbd> > <kbd>Tuist</kbd> menu. It's recommended to add keymaps for these commands.
+While editing a manifest projects `tuist generate` calls automatically on saving, as well as `tuist fetch` while editing the `Dependencies.swift`.
 
 ## Available commands
 - Generate - [`tuist generate -n`](https://docs.tuist.io/commands/generate).
@@ -20,7 +20,7 @@ Commands are available in `Tools` -> `Tuist` menu. It's recommended to add keyma
 - Build - [`tuist build`](https://docs.tuist.io/commands/build).
 - Clean - [`tuist clean`](https://docs.tuist.io/commands/clean).
 - Test - [`tuist test`](https://docs.tuist.io/commands/test).
- <!-- Plugin description end -->
+<!-- Plugin description end -->
 
 ## License
 This plugin is licensed under the terms of the GNU Public License version 3 or any later version.
