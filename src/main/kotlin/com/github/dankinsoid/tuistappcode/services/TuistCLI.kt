@@ -15,8 +15,7 @@ import com.intellij.openapi.util.Key
 import java.io.File
 import java.nio.charset.Charset
 
-class TuistCLI(project: Project) {
-    val project = project
+class TuistCLI(val project: Project, val silent: Boolean = false) {
 
     fun generate(onSuccess: () -> Unit = {}) {
         execute("generate", "Generating project", "-n") {
@@ -24,9 +23,15 @@ class TuistCLI(project: Project) {
         }
     }
 
-    fun fetch(onSuccess: () -> Unit = {}) {
-        execute("fetch", "Fetching dependencies") {
-            onSuccess()
+    fun fetch(update: Boolean = false, onSuccess: () -> Unit = {}) {
+        if (update) {
+            execute("fetch", "Fetching dependencies", "--update") {
+                onSuccess()
+            }
+        } else {
+            execute("fetch", "Fetching dependencies") {
+                onSuccess()
+            }
         }
     }
 
@@ -36,8 +41,14 @@ class TuistCLI(project: Project) {
         }
     }
 
-    fun edit(onSuccess: () -> Unit = {}) {
-        execute("edit", "Creating manifest project", "--permanent") {
+    fun cleanDependencies(onSuccess: () -> Unit = {}) {
+        execute("clean", "Cleaning dependencies", "dependencies") {
+            onSuccess()
+        }
+    }
+
+    fun edit(path: String, onSuccess: () -> Unit = {}) {
+        execute("edit", "Creating manifest project", "--path", path, "--permanent") {
             onSuccess()
         }
     }
@@ -83,7 +94,8 @@ class TuistCLI(project: Project) {
                 }
             })
         }.runProcess()
-        if (output.exitCode != 0) {
+
+        if (!silent && output.exitCode != 0) {
             Notification(
                 "TuistNotifications",
                 "Tuist ${commandLine.parametersList.list.joinToString(" ")}",

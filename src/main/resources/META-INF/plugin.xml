@@ -5,6 +5,7 @@
     <vendor>dankinsoid</vendor>
 
     <depends>com.intellij.modules.appcode</depends>
+    <idea-version since-build="211"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="TuistNotifications"
@@ -14,7 +15,7 @@
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.dankinsoid.tuistappcode.listeners.MyProjectManagerListener"
+        <listener class="com.github.dankinsoid.tuistappcode.listeners.ManifestsProjectListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 
@@ -22,22 +23,47 @@
         <group id="com.github.dankinsoid.tuistappcode.actions.group"
                text="Tuist"
                popup="true"
-               icon="TuistPluginIcons.Companion.TUIST_ACTION">
+               icon="/icons/tuist.svg">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <action id="com.github.dankinsoid.tuistappcode.actions.generate"
                     class="com.github.dankinsoid.tuistappcode.actions.Generate"
-                    text="Generate Project"
+                    text="Generate"
                     description="Generates tuist project">
-            </action>
-            <action id="com.github.dankinsoid.tuistappcode.actions.Fetch"
-                    class="com.github.dankinsoid.tuistappcode.actions.Fetch"
-                    text="Fetch Dependencies"
-                    description="Fetch tuist dependencies">
             </action>
             <action id="com.github.dankinsoid.tuistappcode.actions.edit"
                     class="com.github.dankinsoid.tuistappcode.actions.Edit"
                     text="Edit Manifest"
                     description="Edit tuist manifest">
+            </action>
+            <action id="com.github.dankinsoid.tuistappcode.actions.fetch"
+                    class="com.github.dankinsoid.tuistappcode.actions.Fetch"
+                    text="Fetch Dependencies"
+                    description="Fetch tuist dependencies">
+            </action>
+            <action id="com.github.dankinsoid.tuistappcode.actions.fetchUpdate"
+                    class="com.github.dankinsoid.tuistappcode.actions.FetchUpdate"
+                    text="Update Dependencies"
+                    description="Update tuist dependencies">
+            </action>
+            <action id="com.github.dankinsoid.tuistappcode.actions.cleanDependencies"
+                    class="com.github.dankinsoid.tuistappcode.actions.CleanDependencies"
+                    text="Clean Dependencies"
+                    description="Clean tuist dependencies">
+            </action>
+            <action id="com.github.dankinsoid.tuistappcode.actions.build"
+                    class="com.github.dankinsoid.tuistappcode.actions.Build"
+                    text="Build"
+                    description="Build tuist project">
+            </action>
+            <action id="com.github.dankinsoid.tuistappcode.actions.clean"
+                    class="com.github.dankinsoid.tuistappcode.actions.Clean"
+                    text="Clean"
+                    description="Clean tuist project">
+            </action>
+            <action id="com.github.dankinsoid.tuistappcode.actions.test"
+                    class="com.github.dankinsoid.tuistappcode.actions.Test"
+                    text="Test"
+                    description="Test tuist project">
             </action>
         </group>
     </actions>
