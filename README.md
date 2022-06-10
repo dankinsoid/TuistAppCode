@@ -20,6 +20,7 @@ Commands are available in `Tools` -> `Tuist` menu. It's recommended to add keyma
 - Build - [`tuist build`](https://docs.tuist.io/commands/build).
 - Clean - [`tuist clean`](https://docs.tuist.io/commands/clean).
 - Test - [`tuist test`](https://docs.tuist.io/commands/test).
+ <!-- Plugin description end -->
 
 ## License
 This plugin is licensed under the terms of the GNU Public License version 3 or any later version.
