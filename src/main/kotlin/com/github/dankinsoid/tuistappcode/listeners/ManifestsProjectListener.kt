@@ -75,15 +75,26 @@ internal class ManifestsProjectListener : ProjectManagerListener {
     }
 
     private fun generate(project: Project) {
-        TuistCLI(project, true).generate {
+        tuist(project).generate {
             changedFiles.clear()
         }
     }
 
     private fun fetch(project: Project, onSuccess: () -> Unit) {
-        TuistCLI(project, true).fetch {
+        tuist(project).fetch {
             changedFiles.remove(dependenciesName)
             onSuccess()
+        }
+    }
+
+    private fun tuist(project: Project): TuistCLI = TuistCLI(project, rootPath(project), true)
+
+    private fun rootPath(project: Project): String? {
+        val projectPath = project.basePath ?: return null
+        return if (projectPath.contains(".idea")) {
+            projectPath.substringBeforeLast("/.idea")
+        } else {
+            null
         }
     }
 }

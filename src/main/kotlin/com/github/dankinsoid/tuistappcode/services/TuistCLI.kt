@@ -15,7 +15,7 @@ import com.intellij.openapi.util.Key
 import java.io.File
 import java.nio.charset.Charset
 
-class TuistCLI(val project: Project, val silent: Boolean = false) {
+class TuistCLI(val project: Project, val rootPath: String? = null, val silent: Boolean = false) {
 
     fun generate(onSuccess: () -> Unit = {}) {
         execute("generate", "Generating project", "-n") {
@@ -109,7 +109,7 @@ class TuistCLI(val project: Project, val silent: Boolean = false) {
     private fun commandLine(command: String, vararg arguments: String): GeneralCommandLine {
         val commandLine = GeneralCommandLine("tuist")
 
-        commandLine.workDirectory = File(project.basePath ?: "")
+        commandLine.workDirectory = File(rootPath ?: project.basePath ?: "")
         commandLine.charset = Charset.forName("UTF-8")
         commandLine.addParameter(command)
         arguments.forEach { commandLine.addParameter(it) }
