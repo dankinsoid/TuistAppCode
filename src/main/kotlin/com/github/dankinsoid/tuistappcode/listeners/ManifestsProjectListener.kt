@@ -90,7 +90,7 @@ internal class ManifestsProjectListener : ProjectManagerListener {
     private fun tuist(project: Project): TuistCLI = TuistCLI(project, rootPath(project), true)
 
     private fun rootPath(project: Project): String? {
-        val projectPath = project.basePath ?: return null
+        val projectPath = project.basePath ?: ""
         return if (projectPath.contains(".idea")) {
             projectPath.substringBeforeLast("/.idea")
         } else {

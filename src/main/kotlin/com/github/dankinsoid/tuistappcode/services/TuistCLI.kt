@@ -13,6 +13,8 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFileManager
 import java.io.File
 import java.nio.charset.Charset
 
@@ -20,7 +22,9 @@ class TuistCLI(val project: Project, val rootPath: String? = null, val silent: B
 
     fun generate(onSuccess: () -> Unit = {}) {
         execute("generate", "Generating project", "-n") {
-            project.guessProjectDir()?.refresh(false, true)
+            VirtualFileManager.getInstance()
+            val baseDir = rootPath?.let { LocalFileSystem.getInstance().findFileByPath(it) } ?: project.guessProjectDir() ?: project.basePath?.let { LocalFileSystem.getInstance().findFileByPath(it) }
+            baseDir?.refresh(false, true)
             onSuccess()
         }
     }
